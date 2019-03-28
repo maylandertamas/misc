@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+        <button onclick='findDomElements(["req-class", "req2-class"], ["banned-class", "banned2-class"], ["opt-class", "opt2-class"])'>Get elements</button>
+        <div class="req-class req2-class"></div>
+        <div class="req-class banned-class"></div>
+        <div class="opt-class banned-class"></div>
+        <div class="opt-class"></div>
+        <div class="opt-class opt2-class"></div>
+        <div class="req-class req2-class banned-class"></div>
+        <div class="req-class req2-class opt-class banned2-class"></div>
+        <div class ="opt2-class banned-class"></div>
+        <div class ="opt2-class req-class"></div>
+        <div class="opt2-class"></div>
+        <div class="req-class"></div>
+        <div class="req2-class"></div>
+        <div class="totally random classes in but opt2-class is here"></div>
+        <div class="totally random classes in but banned-class is here"></div>
+        <div class="totally random classes in but banned-class is here also opt2-class is here"></div>
+        <div class="totally random classes in but only req-class is here"></div>
+        <div class="totally random classes in but req2-class and req-class is here"></div>
+        <div class="totally random classes in but req2-class and req-class is here and a wild banned2-class appears"></div>
+        <div class="totally random classes in but req2-class and req-class is here and a wild banned2-class appears with opt-class"></div>
+        
+    <script>
+        /**
+   * The function find and filter DOM elements based on the inputs. The result will be logged to the console.
+   * 
+   * If classNameCombinations = ['alert', 'alert-danger'] will filter out all DOM element with classes 'alert alert-danger'.
+   *    e.g.: <div class="alert alert-danger random-css-class"> will be in the result.
+   * If excludedClassNames = ['banned-class'] then any DOM element with 'banned-class' won't be in the result.
+   *    e.g.: <div class="alert alert-danger banned-class"> won't be in the result.
+   * If optionalClassNames = ['optional-class'] then any DOM element with the class will be in the result.
+   *    e.g.: <div class="optional-class other-class"> will be also in the result.
+   *  Based on the example inputs:
+   *    <div class="optional-class alert"> will be also in the result.
+   *    <div class="alert"> won't be in the result.
+   *    <div class="optional-class banned-class"> won't be in the result.
+
+   * @param classNameCombinations
+   * @param excludedClassNames
+   * @param optionalClassNames
+   */
+    function findDomElements(classNameCombinations/*: string[]*/, excludedClassNames/*: string[]*/ = [], optionalClassNames/*: string[]*/ = []) {
+        let classNamesString = '';
+    if(classNameCombinations.length > 0) {
+      classNameCombinations.forEach((el) => {
+        const elWithoutSpaces = el.trim();
+        classNamesString += elWithoutSpaces !== '' && elWithoutSpaces !== ' ' ? '.' + elWithoutSpaces : '';
+      });
+    } else {
+      return ;
+    }
+    let excludedClassNamesString = '';
+    if (excludedClassNames.length > 0) {
+      excludedClassNames.forEach((el) => {
+        const elWithoutSpaces = el.trim();
+        excludedClassNamesString += elWithoutSpaces !== '' && elWithoutSpaces !== ' ' ? ':not(.' + elWithoutSpaces + ')' : '';
+      });
+    }
+
+    let possibleClassNamesString = '';
+    if(optionalClassNames.length > 0) {
+      optionalClassNames.forEach((el) => {
+        const elWithoutSpaces = el.trim();
+        possibleClassNamesString += elWithoutSpaces !== '' && elWithoutSpaces !== ' ' ? '.' + elWithoutSpaces + excludedClassNamesString + ',' : '';
+      });
+    }
+    const querySelectorString = possibleClassNamesString + classNamesString + excludedClassNamesString;
+    const elements = document.querySelectorAll(querySelectorString);
+    console.log(elements);
+    }
+    </script>
+</body>
+</html>
